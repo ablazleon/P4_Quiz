@@ -29,6 +29,7 @@ rl.on('line', (line) => {
 
     switch (cmd) {
         case '':
+            rl.prompt();
             break;
         case 'h':
         case 'help':
@@ -53,7 +54,7 @@ rl.on('line', (line) => {
             break;
 
         case 'test':
-            cmds.showCmd(rl);
+            cmds.testCmd(rl, args[1]);
             break;
 
         case 'p':
@@ -70,7 +71,7 @@ rl.on('line', (line) => {
             break;
 
         case 'credits':
-            cmds.creditsCmd(rl)
+            cmds.creditsCmd(rl);
             break;
 
         default:
