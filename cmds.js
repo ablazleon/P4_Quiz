@@ -213,7 +213,7 @@ exports.playCmd = rl => {
  */
 exports.creditsCmd = rl => {
     log('Autor de la práctica:');
-    log('Raúl Adrián Blázquez León', 'green');
+    log('RAUL Adrián Blázquez León', 'green');
     rl.prompt();
 };
 
