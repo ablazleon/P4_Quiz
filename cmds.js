@@ -52,11 +52,11 @@ const validateId = id => {
 
     return new Sequelize.Promise((resolve, reject) => {
         if (typeof id === "undefined")  {
-            refect(new Error(`Falta el parametro <id>.`));
+            reject(new Error(`Falta el parametro <id>.`));
         }else {
             id = parseInt(id); // coger la parte entera y descartar lo demas
             if (Number.isNaN(id)) {
-                refect(new Error(`El valor del parametro <id> no es un número.`));
+                reject(new Error(`El valor del parametro <id> no es un número.`));
             }else{
                 resolve(id);
             }
@@ -148,7 +148,7 @@ exports.addCmd = rl => {
  */
 exports.deleteCmd = (rl, id) => {
 
-   validate(id)
+   validateId(id)
    .then(id => models.quiz.destroy({where: {id}}))
    .catch(error => {
        errorlog(error.message);
@@ -209,54 +209,39 @@ exports.editCmd = (rl, id) => {
  * @param id Clave del quiz a probar.
  */
 exports.testCmd = (rl, id) => {
+
+     // Valida el id
     validateId(id)
-        .then(id => models.quiz.findById(id))
-        .then(quiz => {
-            if (!quiz){
-                throw new Error (`No existe un quiz asociado al id ${id}.`);
-             });
-            })
-
-            makeQuestion(rl, `   ${colorize(quiz.question, 'red')} ${colorize('?', 'red')}     `)
-              .then(resp => {
-                  if(resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ){
-                      log(" Su respuesta es correcta.");
-                      biglog('Correcta', 'green');
-                    });
-        });
-
-
-
-
-
-
-            rl.question(`   ${colorize(quiz.question, 'red')} ${colorize('?', 'red')}     `, resp => {
-
-           
-                // Insensible a mayúsculas
-                if(resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ){
-                     log(" Su respuesta es correcta.");
+    .then(id => models.quiz.findById(id))
+    .then(quiz => {
+        if (!quiz) {
+            throw new Error(`No existe un quiz asociado al id ${id}.`);
+        }
+        // Hace la pregunta
+        return makeQuestion(rl, `   ${colorize(quiz.question, 'red')} ${colorize('?', 'red')}     `)
+            .then(resp => {
+                if (resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim()) {
+                    log(' Su respuesta es correcta.');
                     biglog('Correcta', 'green');
-                    
                     rl.prompt();
-                }else{
-                    log(" Su respuesta es incorrecta.");
+                } else {
+                   log('Su respuesta es incorrecta.');
                     biglog('Incorrecta', 'red');
                     rl.prompt();
-                });
-            );
+                }
+            });
+    })
 
-
-        .catch(Sequelize.ValidationError, error =>{
-        errorlog('El quiz es erroneo:');
-        error.errors.forEach(({message})=> errorlog(message));
-        })
-        .catch(error => {
-            errorlog(error.message);
-        })
-        .then(() => {
-            rl.prompt();
-        });
+      .catch(Sequelize.ValidationError, error =>{
+              errorlog('El quiz es erroneo:');
+              error.errors.forEach(({message})=> errorlog(message));
+          })
+      .catch(error => {
+          errorlog(error.message);
+      })
+      .then(() => {
+          rl.prompt();
+      });
 };
 
 /**
@@ -265,8 +250,12 @@ exports.testCmd = (rl, id) => {
  */
 exports.playCmd = rl => {
 
+    const quizzes = model.getAll(); // ¿Cómo guardar las preguntas con acceso a BD?
+    models.quiz.findAll()
+        .each(quiz => {
+            const quizzes = quiz.question;
+        })
 
-    const quizzes = model.getAll();
     let score = 0;
 
     let toBeResolved = []; // Contiene los id de las preguntas sin resolver.
