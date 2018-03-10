@@ -259,24 +259,26 @@ exports.playCmd = rl => {
             .then(() => {
 
                 if (toBePlayed.length <= 0) {
+                    console.log(toBePlayed.length );
                     console.log("SACABO");
                     // resolve(); Ya no es necesario.
                     return;
                 }
 
-                let pos = Math.floor(Math.random() * toBePlayed.length());
+                let pos = Math.floor(Math.random() * toBePlayed.length);
                 let quiz = toBePlayed[pos];
-                toBeplayed.splice(pos, 1);  // Saco la pregunta
+                toBePlayed.splice(pos, 1);  // Saco la pregunta
 
                 return makeQuestion(rl, quiz.question)
                     .then(answer => {
-                        if (answer === quiz.answer) {
+                        if (answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ) {
                             score++;
                             console.log('Ánimo');
+                            console.log(`Llevas ${score} puntos`);
                             return playOne();
                         } else {
                             console.log("KK");
-                            resolve();
+                            //resolve();
                         }
                     });
             });
@@ -287,10 +289,11 @@ exports.playCmd = rl => {
     models.quiz.findAll()
         .then(quizzes => {
             raw: true
+            toBePlayed = quizzes;
+            // console.log(quizzes)
         }) //Sólo quiero los valores, no el resto de funciones de ORM.
 
-    toBePlayed = quizzes;
-    console.log(quizzes)
+
 
 
     .then(() => {
@@ -301,7 +304,7 @@ exports.playCmd = rl => {
         console.log("Error:" + e);
     })
     .then(() => {
-        console.log(score);
+        console.log(`Tu puntuación es de ${score}`);
         rl.prompt();
     })
 
