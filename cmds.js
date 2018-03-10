@@ -254,15 +254,15 @@ exports.playCmd = rl => {
 
     let toBePlayed = [];
 
-    const playOne() => {
+    const playOne = () => {
         return Promise.resolve()
-             .then(() => {
+            .then(() => {
 
-                 if (toBePlayed.length <= 0) {
-                     console.log("SACABO");
+                if (toBePlayed.length <= 0) {
+                    console.log("SACABO");
                     // resolve(); Ya no es necesario.
-                     return;
-                 }
+                    return;
+                }
 
                 let pos = Math.floor(Math.random() * toBePlayed.length());
                 let quiz = toBePlayed[pos];
@@ -272,7 +272,7 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if (answer === quiz.answer) {
                             score++;
-                            console.log(Ánimo);
+                            console.log('Ánimo');
                             return playOne();
                         } else {
                             console.log("KK");
@@ -288,23 +288,22 @@ exports.playCmd = rl => {
         .then(quizzes => {
             raw: true
         }) //Sólo quiero los valores, no el resto de funciones de ORM.
-    toBePlayed = quizzes;
 
-//console.log(quizzes);
-        }
-.
-then(() => {
+    toBePlayed = quizzes;
+    console.log(quizzes)
+
+
+    .then(() => {
     return playOne();
     // Así, sólo se ejecuta la función cuando se ha cargado la BD, caundo la promesa termina.
-})
+    })
     .catch(e => {
         console.log("Error:" + e);
     })
-.
-then(() => {
-    console.log(score);
-    rl.prompt();
-})
+    .then(() => {
+        console.log(score);
+        rl.prompt();
+    })
 
 
 };
