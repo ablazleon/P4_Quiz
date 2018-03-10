@@ -250,54 +250,67 @@ exports.testCmd = (rl, id) => {
  */
 exports.playCmd = rl => {
 
-    const quizzes = model.getAll(); // ¿Cómo guardar las preguntas con acceso a BD?
-    models.quiz.findAll()
-        .each(quiz => {
-            const quizzes = quiz.question;
-        })
-
     let score = 0;
 
-    let toBeResolved = []; // Contiene los id de las preguntas sin resolver.
-    for (let i = 0; i < quizzes.length; i++){
-        toBeResolved.push(i);
-        // log(`${toBeResolved}`);
+    let toBePlayed = [];
+
+    const playOne() => {
+        return Promise.resolve()
+             .then(() => {
+
+                 if (toBePlayed.length <= 0) {
+                     console.log("SACABO");
+                    // resolve(); Ya no es necesario.
+                     return;
+                 }
+
+                let pos = Math.floor(Math.random() * toBePlayed.length());
+                let quiz = toBePlayed[pos];
+                toBeplayed.splice(pos, 1);  // Saco la pregunta
+
+                return makeQuestion(rl, quiz.question)
+                    .then(answer => {
+                        if (answer === quiz.answer) {
+                            score++;
+                            console.log(Ánimo);
+                            return playOne();
+                        } else {
+                            console.log("KK");
+                            resolve();
+                        }
+                    });
+            });
     };
-    // log(`'toBeResolved[2]}' ${toBeResolved[2]}`);
 
-    const playOne = () => {
-        if (typeof quizzes === 'undefined' || toBeResolved.length === 0){
-            // El array o no está definido o no tiene elementos.
-            log('Fin del juego. Aciertos:');
-            biglog(score, 'magenta');
-            rl.prompt();
-        } else{
-            let id = Math.floor(Math.random()*toBeResolved.length);
-            // log(`id ${id}`);
-            // log(`toBeResolved.length ${toBeResolved.length}`); // Sacar su id.
-
-            // log(`toBeResolved.splice(${id}, 1)} ${toBeResolved.splice(id, 1)}`); // Sacar su id.
-            //log(`${toBeResolved.push(id)}`);
-            let quiz = model.getByIndex(toBeResolved.splice(id, 1));
-
-            rl.question(`   ${colorize(quiz.question, 'red')} ${colorize('?', 'red')}     `, resp => {
-                if (resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim()) {
-                    score = score + 1;
-                    log(`CORRECTO - Lleva ${score} aciertos `);
-                    playOne();
-                } else {
-                    log('INCORRECTO.');
-                    log(`Fin del juego. Aciertos: ${score} `);
-                    biglog(score, 'magenta');
-                    rl.prompt();
-                }
-            })
-        };
-    };
     playOne();
+
+    models.quiz.findAll()
+        .then(quizzes => {
+            raw: true
+        }) //Sólo quiero los valores, no el resto de funciones de ORM.
+    toBePlayed = quizzes;
+
+//console.log(quizzes);
+        }
+.
+then(() => {
+    return playOne();
+    // Así, sólo se ejecuta la función cuando se ha cargado la BD, caundo la promesa termina.
+})
+    .catch(e => {
+        console.log("Error:" + e);
+    })
+.
+then(() => {
+    console.log(score);
+    rl.prompt();
+})
+
 
 };
 
+
+// ;
 /**
  * Muestra los nombre de los autores de la práctica.
  */
