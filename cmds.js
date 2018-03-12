@@ -226,7 +226,7 @@ exports.testCmd = (rl, id) => {
                     rl.prompt();
                 } else {
                    console.log('Su respuesta es incorrecta.');
-                    console.log('Incorrecta');
+                    log('incorrecta');
                     rl.prompt();
                 }
             });
@@ -273,13 +273,14 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if (answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ) {
                             score++;
-                            console.log('CORRECTO');
+                            console.log('correcto');
                             console.log(`Llevas ${score} puntos`);
                             return playOne();
                         } else {
-                            console.log("INCORRECTO");
-                            console.log(`Fin del juego. Aciertos: ${score} `);
-                            biglog(score, 'magenta');
+                            console.log("incorrecto");
+                            console.log('Fin');
+                            console.log(`del juego. Aciertos: ${score} `);
+                            log(score, 'magenta');
                             //resolve();
                         }
                     });
