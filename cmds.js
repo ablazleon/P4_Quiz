@@ -273,11 +273,11 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if (answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ) {
                             score++;
-                            console.log('correcto');
+                            log('correcto');
                             console.log(`Llevas ${score} puntos`);
                             return playOne();
                         } else {
-                            console.log('incorrecto');
+                            log('incorrecto');
                             console.log('Fin');
                             console.log(`del juego. Aciertos: ${score} `);
                             log(score, 'magenta');
