@@ -222,11 +222,11 @@ exports.testCmd = (rl, id) => {
             .then(resp => {
                 if (resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim()) {
                     log(' Su respuesta es correcta.');
-                    biglog('Correcta', 'green');
+                    console.log('Correcta');
                     rl.prompt();
                 } else {
-                   log('Su respuesta es incorrecta.');
-                    biglog('Incorrecta', 'red');
+                   console.log('Su respuesta es incorrecta.');
+                    console.log('Incorrecta');
                     rl.prompt();
                 }
             });
@@ -259,8 +259,8 @@ exports.playCmd = rl => {
             .then(() => {
 
                 if (toBePlayed.length <= 0) {
-                    console.log(toBePlayed.length );
-                    console.log("SACABO");
+                    // console.log(toBePlayed.length );
+                    // console.log("SACABO");
                     // resolve(); Ya no es necesario.
                     return;
                 }
@@ -273,11 +273,13 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if (answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ) {
                             score++;
-                            console.log('Ánimo');
+                            console.log('CORRECTO');
                             console.log(`Llevas ${score} puntos`);
                             return playOne();
                         } else {
-                            console.log("KK");
+                            console.log("INCORRECTO");
+                            console.log(`Fin del juego. Aciertos: ${score} `);
+                            biglog(score, 'magenta');
                             //resolve();
                         }
                     });
