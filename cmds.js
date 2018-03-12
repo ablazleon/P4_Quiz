@@ -226,7 +226,7 @@ exports.testCmd = (rl, id) => {
                     rl.prompt();
                 } else {
                    console.log('Su respuesta es incorrecta.');
-                    log('incorrecta');
+                    console.log('incorrecta');
                     rl.prompt();
                 }
             });
@@ -277,7 +277,7 @@ exports.playCmd = rl => {
                             console.log(`Llevas ${score} puntos`);
                             return playOne();
                         } else {
-                            console.log("incorrecto");
+                            console.log('incorrecto');
                             console.log('Fin');
                             console.log(`del juego. Aciertos: ${score} `);
                             log(score, 'magenta');
