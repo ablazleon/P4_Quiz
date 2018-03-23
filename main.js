@@ -3,10 +3,10 @@ const readline = require('readline');
 
 const cmds= require("./cmds");
 const net = require("net");
+const {log, biglog, errorlog, colorize} = require("./out")(socket);
 
-net.createServer(socket => {
-
-    const {log, biglog, errorlog, colorize} = require("./out")(socket);
+net.createServer(socket => { // Crea un servidor
+    
 // A function, to createa socket
 
     socket
@@ -102,7 +102,10 @@ net.createServer(socket => {
         //process.exit(0);
     });
 
-}).listen(3030);
+})
+.listen(3030);
+
+
 
 
 
