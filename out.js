@@ -1,9 +1,6 @@
 const figlet = require('figlet');
 const chalk = require('chalk');
 
-exports = module.exports = socket => {
-
-
 /**
  *  Dar color a un string.
  *
@@ -26,10 +23,9 @@ const colorize = (msg, color) => {
  *  @param color    Color de texto.
  *
  */
-// const log = (socket, msg, color) => {
-    const log = ( msg, color) => {
+const log = (socket, msg, color) => {
 
-   socket.write(colorize(msg, color));
+    socket.write(colorize(msg, color)+ "\n");
 };
 
 /**
@@ -39,10 +35,9 @@ const colorize = (msg, color) => {
  *  @param color    Color de texto.
  *
  */
-//const biglog = (socket, msg, color) => {
-const biglog = ( msg, color) => {
+const biglog = (socket, msg, color) => {
 
-    log(figlet.textSync(msg, { horizontalLayout: 'full' }), color);
+    log(socket, figlet.textSync(msg, { horizontalLayout: 'full' }), color);
 };
 
 /**
@@ -51,23 +46,14 @@ const biglog = ( msg, color) => {
  *  @param msg      Texto del mensaje a escribir
  *
  */
-const errorlog = (emsg) => {
+const errorlog = (socket, emsg) => {
 
-    console.log(`${colorize("Error", "red")}: ${colorize(colorize(emsg, "red"), "bgYellowBright")}`);
+    socket.write(`${colorize("Error", "red")}: ${colorize(colorize(emsg, "red"), "bgYellowBright")} \n `);
 };
 
-// exports = module.exports = {
-//     colorize,
-//     log,
-//     biglog,
-//     errorlog
-// };
-
-    return {
-        colorize,
-        log,
-        biglog,
-        errorlog
-    }
-
-}
+exports = module.exports = {
+    colorize,
+    log,
+    biglog,
+    errorlog
+};

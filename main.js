@@ -1,27 +1,17 @@
 const readline = require('readline');
 
+const {log, biglog, errorlog, colorize} = require("./out");
 
-const cmds= require("./cmds");
+const cmds = require("./cmds");
+
 const net = require("net");
-const {log, biglog, errorlog, colorize} = require("./out")(socket);
 
-net.createServer(socket => { // Crea un servidor
-    
-// A function, to createa socket
+net.createServer(socket => {
 
-    socket
-    .on("error", () => {
-            rl.close();
-        })
-    .on("error", () => {
-            rl.close();
-        })
-
-    console.log("Nuevo cliente" + socket.remoteAdress);
-
+    console.log(" Se ha conectado un cliente desde " + socket.remoteAdress);
 
 // Mensaje inicial
-    biglog('CORE quiz', 'green');
+    biglog(socket, 'CORE quiz', 'green');
 
 
     const rl = readline.createInterface({
@@ -36,6 +26,9 @@ net.createServer(socket => { // Crea un servidor
         }
     });
 
+    socket
+        .on("end", () => {rl.close(); }) // En caso de ror
+        .on("error", () => {rl.close(); });
     rl.prompt();
 
     rl.on('line', (line) => {
@@ -48,45 +41,45 @@ net.createServer(socket => { // Crea un servidor
                 break;
             case 'h':
             case 'help':
-                cmds.helpCmd(rl);
+                cmds.helpCmd(socket, rl);
                 break;
 
             case 'q':
             case 'quit':
-                cmds.quitCmd(rl);
+                cmds.quitCmd(socket, rl);
                 break;
 
             case 'add':
-                cmds.addCmd(rl);
+                cmds.addCmd(socket, rl);
                 break;
 
             case 'list':
-                cmds.listCmd(rl);
+                cmds.listCmd(socket, rl);
                 break;
 
             case 'show':
-                cmds.showCmd(rl, args[1]);
+                cmds.showCmd(socket, rl, args[1]);
                 break;
 
             case 'test':
-                cmds.testCmd(rl, args[1]);
+                cmds.testCmd(socket, rl, args[1]);
                 break;
 
             case 'p':
             case 'play':
-                cmds.playCmd(rl);
+                cmds.playCmd(socket, rl);
                 break;
 
             case 'delete':
-                cmds.deleteCmd(rl, args[1]);
+                cmds.deleteCmd(socket, rl, args[1]);
                 break;
 
             case 'edit':
-                cmds.editCmd(rl, args[1]);
+                cmds.editCmd(socket, rl, args[1]);
                 break;
 
             case 'credits':
-                cmds.creditsCmd(rl);
+                cmds.creditsCmd(socket, rl);
                 break;
 
             default:
@@ -98,14 +91,9 @@ net.createServer(socket => { // Crea un servidor
 
     }).on('close', () => {
         log(socket, 'Adios!');
-        socket.end();
-        //process.exit(0);
+        process.exit(0);
     });
 
-})
-.listen(3030);
-
-
-
+}).listen(3030);
 
 
