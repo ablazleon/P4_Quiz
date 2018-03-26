@@ -91,7 +91,7 @@ net.createServer(socket => {
 
     }).on('close', () => {
         log(socket, 'Adios!');
-        process.exit(0);
+        // process.exit(0); No debo matar al servidor cada vez que un cliente se desconecte.
     });
 
 }).listen(3030);
