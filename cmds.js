@@ -224,11 +224,11 @@ exports.testCmd = (socket, rl, id) => {
                 if (resp.toLowerCase().trim() === quiz.answer.toLowerCase().trim()) {
                     log(socket, ' Su respuesta es correcta.');
                     log(socket, 'Correcta');
-                    rl.prompt();
+
                 } else {
                    log(socket, 'Su respuesta es incorrecta.');
                    log(socket, 'incorrecta');
-                    rl.prompt();
+
                 }
             });
     })
@@ -286,9 +286,9 @@ exports.playCmd = (socket, rl) => {
                         }
                     });
             });
-    };
+    }
 
-    playOne();
+
 
     models.quiz.findAll()
         .then(quizzes => {
